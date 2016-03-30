@@ -1,5 +1,7 @@
 package de.fh_erfurt.ai.tutorium.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Paul Cech on 30.03.16.
  */
@@ -53,7 +55,12 @@ public class Contact {
 
     private static final String LOG_TAG = Contact.class.getSimpleName();
 
+    @SerializedName("name")
     private String mName;
+
+    @SerializedName("mail")
     private String mMail;
+
+    @SerializedName("phone")
     private String mPhone;
 }

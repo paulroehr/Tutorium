@@ -3,12 +3,14 @@ package de.fh_erfurt.ai.tutorium.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import de.fh_erfurt.ai.tutorium.ContactDataHolder;
+import de.fh_erfurt.ai.tutorium.ContactParser;
 import de.fh_erfurt.ai.tutorium.R;
 import de.fh_erfurt.ai.tutorium.adapter.ContactAdapter;
 import de.fh_erfurt.ai.tutorium.model.Contact;
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
                      ContactDataHolder.getInstance().addContact(contact);
 
                      mContactAdapter.notifyDataSetChanged();
+
+                     Log.d(LOG_TAG, ContactParser.loadFromContacts(ContactDataHolder.getInstance().getContacts()));
                  }
              }
              else {
