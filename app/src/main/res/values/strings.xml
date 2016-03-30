@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Tutorium</string>
+
+    <string name="person_name">Name</string>
+    <string name="person_mail">Mail</string>
+    <string name="person_phone">Nummer</string>
+
+    <string name="system_add">Hinzufügen</string>
+    <string name="system_save">Speichern</string>
+</resources>
