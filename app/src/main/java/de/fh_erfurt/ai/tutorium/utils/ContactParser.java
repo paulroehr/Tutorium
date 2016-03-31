@@ -1,10 +1,9 @@
-package de.fh_erfurt.ai.tutorium;
+package de.fh_erfurt.ai.tutorium.utils;
 
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import de.fh_erfurt.ai.tutorium.model.Contact;
 

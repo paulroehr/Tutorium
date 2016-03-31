@@ -57,8 +57,8 @@ public class ContactAdapter extends BaseAdapter {
 
             viewHolder = new ViewHolder();
 
-            viewHolder.mName = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.mMail = (TextView) convertView.findViewById(R.id.mail);
+            viewHolder.mName  = (TextView) convertView.findViewById(R.id.name);
+            viewHolder.mMail  = (TextView) convertView.findViewById(R.id.mail);
             viewHolder.mPhone = (TextView) convertView.findViewById(R.id.phone);
 
             convertView.setTag(viewHolder);

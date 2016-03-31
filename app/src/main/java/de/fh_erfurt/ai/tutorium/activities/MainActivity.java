@@ -1,19 +1,26 @@
 package de.fh_erfurt.ai.tutorium.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import de.fh_erfurt.ai.tutorium.ContactDataHolder;
-import de.fh_erfurt.ai.tutorium.ContactParser;
+import de.fh_erfurt.ai.tutorium.utils.ContactParser;
 import de.fh_erfurt.ai.tutorium.R;
 import de.fh_erfurt.ai.tutorium.adapter.ContactAdapter;
 import de.fh_erfurt.ai.tutorium.model.Contact;
+import de.fh_erfurt.ai.tutorium.utils.StorageWrapper;
+import de.fh_erfurt.ai.tutorium.utils.permissions.PermissionRequest;
+import de.fh_erfurt.ai.tutorium.utils.permissions.PermissionRequestCodes;
+import de.fh_erfurt.ai.tutorium.utils.permissions.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,12 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
         mAddContact.setOnClickListener(mAddContactClickListener);
 
-        mContactAdapter = new ContactAdapter(
-                ContactDataHolder.getInstance().getContacts(),
-                this
-        );
-
-        mContactList.setAdapter(mContactAdapter);
+        if (PermissionRequest.requestStorage(this)) {
+            // Load contacts
+            initializeContacts();
+        }
     }
 
     @Override
@@ -42,14 +47,17 @@ public class MainActivity extends AppCompatActivity {
          if (_RequestCode == ContactActivity.REQUEST_ADD_CONTACT) {
              if (_ResultCode == RESULT_OK) {
                  if (_Data != null) {
-                     String name = _Data.getStringExtra(ContactActivity.KEY_NAME);
-                     String mail = _Data.getStringExtra(ContactActivity.KEY_MAIL);
+
+                     String name  = _Data.getStringExtra(ContactActivity.KEY_NAME);
+                     String mail  = _Data.getStringExtra(ContactActivity.KEY_MAIL);
                      String phone = _Data.getStringExtra(ContactActivity.KEY_PHONE);
 
                      Contact contact = new Contact(name, mail, phone);
                      ContactDataHolder.getInstance().addContact(contact);
 
                      mContactAdapter.notifyDataSetChanged();
+
+                     StorageWrapper.saveContacts(ContactDataHolder.getInstance().getContacts());
 
                      Log.d(LOG_TAG, ContactParser.loadFromContacts(ContactDataHolder.getInstance().getContacts()));
                  }
@@ -58,6 +66,37 @@ public class MainActivity extends AppCompatActivity {
 
              }
          }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int _RequestCode, String[] _Permissions, int[] _GrantResults) {
+        super.onRequestPermissionsResult(_RequestCode, _Permissions, _GrantResults);
+
+        switch (_RequestCode) {
+            case PermissionRequestCodes.STORAGE_RW: {
+
+                if (PermissionUtils.verifyPermissions(_GrantResults)) {
+                    // Load contacts
+                    initializeContacts();
+                }
+                else {
+
+                }
+            }
+        }
+
+    }
+
+    private void initializeContacts() {
+
+        ContactDataHolder.getInstance().setContacts(StorageWrapper.loadContacts());
+
+        mContactAdapter = new ContactAdapter(
+                ContactDataHolder.getInstance().getContacts(),
+                this
+        );
+
+        mContactList.setAdapter(mContactAdapter);
     }
 
     // -----------------------------------------------------------------------------

@@ -19,7 +19,7 @@ public class Main extends Application {
     // Public methods
     // ----------------------------------------------------------------------------
 
-    public static Application getApplication() {
+    public static Application getAppContext() {
         return mApplication;
     }
 

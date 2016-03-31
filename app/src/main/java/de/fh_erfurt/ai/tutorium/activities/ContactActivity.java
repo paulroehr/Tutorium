@@ -27,8 +27,8 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     private void returnContactData() {
-        String name = mName.getText().toString();
-        String mail = mMail.getText().toString();
+        String name  = mName.getText().toString();
+        String mail  = mMail.getText().toString();
         String phone = mPhone.getText().toString();
 
         Intent intent = new Intent();
@@ -59,8 +59,8 @@ public class ContactActivity extends AppCompatActivity {
 
     public static final int REQUEST_ADD_CONTACT = 10;
 
-    public static final String KEY_NAME = "name";
-    public static final String KEY_MAIL = "mail";
+    public static final String KEY_NAME  = "name";
+    public static final String KEY_MAIL  = "mail";
     public static final String KEY_PHONE = "phone";
 
     private EditText mName;
