@@ -12,7 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import de.fh_erfurt.ai.tutorium.ContactDataHolder;
+import de.fh_erfurt.ai.tutorium.eventbus.BusProvider;
+import de.fh_erfurt.ai.tutorium.eventbus.events.ContactsLoadedEvent;
+import de.fh_erfurt.ai.tutorium.services.ContactService;
 import de.fh_erfurt.ai.tutorium.utils.ContactParser;
 import de.fh_erfurt.ai.tutorium.R;
 import de.fh_erfurt.ai.tutorium.adapter.ContactAdapter;
@@ -38,6 +44,18 @@ public class MainActivity extends AppCompatActivity {
             // Load contacts
             initializeContacts();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        BusProvider.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        BusProvider.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -88,11 +106,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeContacts() {
+        ContactService.startLoadContacts(this);
+    }
 
-        ContactDataHolder.getInstance().setContacts(StorageWrapper.loadContacts());
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onContactsLoaded(ContactsLoadedEvent _event) {
         mContactAdapter = new ContactAdapter(
-                ContactDataHolder.getInstance().getContacts(),
+                _event.getContacts(),
                 this
         );
 

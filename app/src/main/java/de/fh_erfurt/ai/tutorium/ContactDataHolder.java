@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.fh_erfurt.ai.tutorium.eventbus.BusProvider;
+import de.fh_erfurt.ai.tutorium.eventbus.events.ContactsLoadedEvent;
 import de.fh_erfurt.ai.tutorium.model.Contact;
 
 /**
@@ -42,6 +44,8 @@ public class ContactDataHolder {
 
     public void setContacts(ArrayList<Contact> _contacts) {
         mContacts = _contacts;
+
+        BusProvider.post(new ContactsLoadedEvent(mContacts));
     }
 
     public void addContact(Contact _contact) {
