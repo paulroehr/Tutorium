@@ -1,8 +1,6 @@
-package de.fh_erfurt.ai.tutorium;
+package de.fh_erfurt.ai.tutorium.dataholder;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import de.fh_erfurt.ai.tutorium.eventbus.BusProvider;
 import de.fh_erfurt.ai.tutorium.eventbus.events.ContactsLoadedEvent;
@@ -48,8 +46,28 @@ public class ContactDataHolder {
         BusProvider.post(new ContactsLoadedEvent(mContacts));
     }
 
+    public Contact getContactById(int _contactId) {
+        // Check if id is valid and available in the contact list.
+        if (_contactId >= mContacts.size()) {
+            return null;
+        }
+        return mContacts.get(_contactId);
+    }
+
     public void addContact(Contact _contact) {
         mContacts.add(_contact);
+    }
+
+    public boolean removeContact(Contact _contact) {
+        return mContacts.remove(_contact);
+    }
+
+    public boolean removeContact(int _contactId) {
+        // Check if id is valid and available in the contact list.
+        if (_contactId >= mContacts.size()) {
+            return false;
+        }
+        return removeContact(mContacts.get(_contactId));
     }
 
     // ----------------------------------------------------------------------------

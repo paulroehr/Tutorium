@@ -6,9 +6,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
-import de.fh_erfurt.ai.tutorium.ContactDataHolder;
-import de.fh_erfurt.ai.tutorium.eventbus.BusProvider;
-import de.fh_erfurt.ai.tutorium.eventbus.events.ContactsLoadedEvent;
+import de.fh_erfurt.ai.tutorium.dataholder.ContactDataHolder;
 import de.fh_erfurt.ai.tutorium.model.Contact;
 import de.fh_erfurt.ai.tutorium.utils.StorageWrapper;
 
@@ -18,7 +16,8 @@ import de.fh_erfurt.ai.tutorium.utils.StorageWrapper;
  */
 public class ContactService extends IntentService {
 
-    private static final String ACTION_LOAD_CONTACTS = "de.fh_erfurt.ai.tutorium.services.action.FOO";
+    private static final String ACTION_LOAD_CONTACTS = "de.fh_erfurt.ai.tutorium.services.action.LOAD_CONTACTS";
+    private static final String ACTION_SAVE_CONTACTS = "de.fh_erfurt.ai.tutorium.services.action.SAVE_CONTACTS";
 
     public ContactService() {
         super("ContactService");
@@ -30,18 +29,38 @@ public class ContactService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startLoadContacts(Context context) {
-        Intent intent = new Intent(context, ContactService.class);
+    public static void startLoadContacts(Context _context) {
+        Intent intent = new Intent(_context, ContactService.class);
         intent.setAction(ACTION_LOAD_CONTACTS);
-        context.startService(intent);
+        _context.startService(intent);
+    }
+
+
+    /**
+     * Starts this service to perform action Foo with the given parameters. If
+     * the service is already performing a task this action will be queued.
+     *
+     * @see IntentService
+     */
+    public static void startSaveContacts(Context _context) {
+        Intent intent = new Intent(_context, ContactService.class);
+        intent.setAction(ACTION_SAVE_CONTACTS);
+        _context.startService(intent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_LOAD_CONTACTS.equals(action)) {
-                handleLoadContacts();
+
+            switch (action) {
+                case ACTION_LOAD_CONTACTS:
+                    handleLoadContacts();
+                    break;
+
+                case ACTION_SAVE_CONTACTS:
+                    handleSaveContacts();
+                    break;
             }
         }
     }
@@ -53,5 +72,13 @@ public class ContactService extends IntentService {
     private void handleLoadContacts() {
         ArrayList<Contact> contacts = StorageWrapper.loadContacts();
         ContactDataHolder.getInstance().setContacts(contacts);
+    }
+
+    /**
+     * Handle action Foo in the provided background thread with the provided
+     * parameters.
+     */
+    private void handleSaveContacts() {
+        StorageWrapper.saveContacts(ContactDataHolder.getInstance().getContacts());
     }
 }
